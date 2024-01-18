@@ -180,6 +180,7 @@ class ConfidenceMap:
 
         # Select marked columns from Laplacian to create L_M and B^T
         B = D[:, seeds]
+        # B = D[:, seeds.astype(int)]
 
         # Select marked nodes to create B^T
         N = np.sum(G > 0).item()

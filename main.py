@@ -1,13 +1,18 @@
 import argparse
 
 import scipy.io
+from PIL import Image
+import numpy as np
+
 from visualization_utils import confidence_plotter, show, save_as_npy
 
 from confidence_map_numpy import ConfidenceMap as ConfidenceMap_numpy
-from confidence_map_cupy import ConfidenceMap as ConfidenceMap_cupy
+# from confidence_map_cupy import ConfidenceMap as ConfidenceMap_cupy
 from confidence_map_oct import ConfidenceMap as ConfidenceMap_oct
 
 if __name__ == "__main__":
+
+    path_to_img = './data/806.png'
 
     argparser = argparse.ArgumentParser()
     argparser.add_argument(
@@ -29,8 +34,8 @@ if __name__ == "__main__":
     # Import confidence map function from the selected backend
     if args.backend == "numpy":
         ConfidenceMap = ConfidenceMap_numpy
-    elif args.backend == "cupy":
-        ConfidenceMap = ConfidenceMap_cupy
+    # elif args.backend == "cupy":
+    #     ConfidenceMap = ConfidenceMap_cupy
     elif args.backend == "octave":
         ConfidenceMap = ConfidenceMap_oct
     else:
@@ -45,23 +50,31 @@ if __name__ == "__main__":
             f'The precision "{args.precision}" is not supported.'
         )
 
-    # Load neck data and call confidence estimation for B-mode with default parameters
-    img = scipy.io.loadmat("data/neck.mat")["img"]
+    # # Load neck data and call confidence estimation for B-mode with default parameters
+    # img = scipy.io.loadmat("data/neck.mat")["img"]
+    # cm = ConfidenceMap(
+    #     args.precision, alpha=2.0, beta=90.0, gamma=0.03
+    # )
+    # map_ = cm(img)
+    # save_as_npy(map_, "data/neck_result2.npy")
+    # confidence_plotter(img, map_)
+    #
+    # # Load femur data and call confidence estimation for B-mode with default parameters
+    # img = scipy.io.loadmat("data/femur.mat")["img"]
+    # cm = ConfidenceMap(
+    #     args.precision, alpha=2.0, beta=90.0, gamma=0.06
+    # )
+    # map_ = cm(img)
+    # save_as_npy(map_, "data/femur_result.npy")
+    #
+    # confidence_plotter(img, map_)
+    img_pil = Image.open(path_to_img)
+    img = np.array(img_pil)
     cm = ConfidenceMap(
-        args.precision, alpha=2.0, beta=90.0, gamma=0.03
+        args.precision, alpha=2.0, beta=180.0, gamma=0.2
     )
     map_ = cm(img)
-    save_as_npy(map_, "data/neck_result.npy")
-    confidence_plotter(img, map_)
-
-    # Load femur data and call confidence estimation for B-mode with default parameters
-    img = scipy.io.loadmat("data/femur.mat")["img"]
-    cm = ConfidenceMap(
-        args.precision, alpha=2.0, beta=90.0, gamma=0.06
-    )
-    map_ = cm(img)
-    save_as_npy(map_, "data/femur_result.npy")
-
+    save_as_npy(map_, "data/149_result.npy")
     confidence_plotter(img, map_)
 
     show()
