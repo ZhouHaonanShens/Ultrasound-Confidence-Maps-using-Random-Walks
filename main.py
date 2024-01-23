@@ -12,7 +12,7 @@ from confidence_map_oct import ConfidenceMap as ConfidenceMap_oct
 
 if __name__ == "__main__":
 
-    path_to_img = './data/806.png'
+    path_to_img = './data/632.png'
 
     argparser = argparse.ArgumentParser()
     argparser.add_argument(
@@ -70,6 +70,8 @@ if __name__ == "__main__":
     # confidence_plotter(img, map_)
     img_pil = Image.open(path_to_img)
     img = np.array(img_pil)
+    # img = img[..., -1]
+    img[img < 20] = 0
     cm = ConfidenceMap(
         args.precision, alpha=2.0, beta=180.0, gamma=0.2
     )
